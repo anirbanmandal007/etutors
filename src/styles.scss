@@ -1,1 +1,43 @@
 /* You can add global styles to this file, and also import other style files */
+@import "primeicons/primeicons.css";
+
+button:disabled {
+  opacity: 0.5 !important;
+}
+
+.float-left {
+  float: left !important;
+}
+
+input:read-only {
+  background-color: #e8e8e8;
+}
+
+.ng2-tag-input {
+  padding: 2.25rem 0 !important;
+}
+
+.no-border {
+    border: none !important;
+}
+
+
+app-spinner {
+  background: none repeat scroll 0 0 black;
+  position: fixed;
+  display: block;
+  opacity: 0.5;
+  z-index: 1000001; // or, higher
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.notification-container:not(:first-child) {
+  display: none;
+}
+
+span.mandatory {
+  color: red;
+}

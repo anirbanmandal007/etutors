@@ -1,0 +1,110 @@
+<app-banner
+  *ngIf="isUserCreated !== undefined"
+  [type]="isUserCreated === true ? 'success' : 'error'"
+  [message]="
+    isUserCreated === true ? userCreationSuccessMsg : userCreationErrorMsg
+  "
+>
+</app-banner>
+<app-banner
+  *ngIf="userAlreadyExist"
+  [type]="'alert'"
+  [message]="userAlreadyExistAlertMsg"
+>
+</app-banner>
+<div class="container-fluid login-form">
+  <div class="row">
+    <div class="colm-form col-12">
+      <form class="form-container row" [formGroup]="signupForm">
+        <h6>Please register yourself!</h6>
+        <div class="w-100 my-3 float-left col-12">
+          <label for="firstname">I am a:</label>
+          <label class="float-left" style="margin-left: 1em"
+            ><input
+              type="radio"
+              formControlName="userType"
+              value="student"
+              name="userType"
+            />
+            Student
+          </label>
+          <label class="" style="margin-left: 1em"
+            ><input
+              type="radio"
+              formControlName="userType"
+              value="tutor"
+              name="userType"
+            />
+            Tutor</label
+          >
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label for="firstname">First Name </label>
+          <input
+            type="text"
+            formControlName="name"
+            placeholder="Enter your name"
+          />
+        </div>
+        <div class="col-12 col-lg-6">
+          <label for="firstname">Last Name </label>
+          <input
+            type="text"
+            formControlName="lastname"
+            placeholder="Enter your last name"
+          />
+        </div>
+        <div class="col-12 col-lg-6">
+          <label for="firstname">Email </label>
+          <input
+            type="text"
+            formControlName="email"
+            name="random1"
+            autocomplete="new-password"
+            placeholder="Enter your email address"
+          />
+        </div>
+        <div class="col-12 col-lg-6">
+          <label for="firstname">Phone </label>
+          <input
+            type="text"
+            formControlName="phone"
+            name="random1"
+            autocomplete="new-password"
+            placeholder="Enter your phone number"
+          />
+        </div>
+        <div class="col-12 col-lg-6">
+          <label for="firstname">Password </label>
+          <input
+            type="password"
+            formControlName="password"
+            name="random2"
+            autocomplete="new-password"
+            placeholder="Enter your password"
+          />
+          <!-- <p class="error" *ngIf=""></p> -->
+        </div>
+
+        <div class="col-12 col-lg-6">
+          <label for="firstname">Confirm Password </label>
+          <input
+            type="password"
+            formControlName="confPass"
+            placeholder="Confirm your password"
+          />
+        </div>
+
+        <button
+          class="btn-login mt-5"
+          (click)="validateSignupForm()"
+          [disabled]="!signupForm.valid"
+        >
+          Register
+        </button>
+        <button class="btn-new" routerLink="/login">Go back to login</button>
+      </form>
+    </div>
+  </div>
+</div>

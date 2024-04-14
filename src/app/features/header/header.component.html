@@ -1,0 +1,66 @@
+<div>
+  <div class="header-blue">
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean-search">
+      <div class="container">
+        <a class="navbar-brand brand-name ml-5" [routerLink]="['/home']"
+          >e-Tutors</a
+        >
+        <div class="menus">
+          <a class="navbar-brand menu" [routerLink]="['/home']">Home</a>
+          <a
+            class="navbar-brand menu"
+            *ngIf="loggedInUser.userType === 'tutor'"
+            [routerLink]="['/my-courses']"
+            >Your Courses</a
+          >
+          <a
+            class="navbar-brand menu"
+            *ngIf="loggedInUser.userType === 'student'"
+            [routerLink]="['/home']"
+            >Find Teachers</a
+          >
+          <a
+            class="navbar-brand menu"
+            *ngIf="loggedInUser.userType === 'tutor'"
+            [routerLink]="['/home']"
+            >Find Students</a
+          >
+        </div>
+        <button
+          data-toggle="collapse"
+          class="navbar-toggler"
+          data-target="#navcol-1"
+        >
+          <span class="sr-only">Toggle navigation</span
+          ><span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navcol-1">
+          <!-- <a class="btn btn-light action-button" role="button" (click)="logout()">Log Out</a> -->
+          <div class="dropdown">
+            <!-- <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">Dropdown</a> -->
+            <fa-icon
+              *ngIf="!loggedInUser?.profileImage"
+              class="dropdown-toggle"
+              data-bs-toggle="dropdown"
+              [icon]="faUser"
+            ></fa-icon>
+            <img *ngIf="loggedInUser?.profileImage" class="dropdown-toggle profile-image" data-bs-toggle="dropdown" [src]="loggedInUser?.profileImage" alt="Profile picture"/>
+            <div class="dropdown-menu p-3">
+              <h6>
+                {{ loggedInUser.name }} {{ loggedInUser.lastname }}
+              </h6>
+              <p class="mb-1">
+                <a href="javascript:void(0)" [routerLink]="['/account']"
+                  >Account</a
+                >
+              </p>
+              <p class="mb-1">
+                <a href="javascript:void(0)" (click)="logout()">LogOut</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</div>

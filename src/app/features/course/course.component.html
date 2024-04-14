@@ -1,0 +1,124 @@
+<app-header></app-header>
+<!-- <div *ngIf="!courseCreationInProgress" class="progress-spinner">
+    <p-progressSpinner ariaLabel="loading"></p-progressSpinner>
+    <div class="backdrop"></div>
+</div> -->
+
+<div class="container mt-4">
+    <form class="row course-form" [formGroup]="courseForm">
+        <h4 class="mb-3"><u>Add Course</u></h4>
+        <!-- <h6 class="my-2">Please provide following details</h6> -->
+        <div class="mb-3 col-12 col-lg-6">
+            <label for="courseName" class="form-label">Course Name <span class="mandatory">*</span></label>
+            <input type="text" class="form-control" formControlName="courseName" id="courseName" aria-describedby="courseName">
+        </div>
+        <div class="mb-3 col-12 col-lg-6">
+            <label for="courseDesc" class="form-label">Course Description <span class="mandatory">*</span></label>
+            <input type="text" class="form-control" formControlName="courseDesc" id="courseDesc" aria-describedby="courseDesc">
+        </div>
+        <div class="mb-3 col-12 col-lg-6">
+            <label for="courseSub" class="form-label">Course Subjects to Cover 
+                <small>(Maximum 10 can be added)</small>
+                <span class="mandatory"> *</span>
+            </label>
+            <p-chips class="d-flex w-100" [max]="10" separator="," formControlName="courseSub"></p-chips>
+        </div>
+        <div class="mb-3 col-12 col-lg-6">
+            <label for="courseLevel" class="form-label">Course Level <span class="mandatory">*</span></label>
+            <select class="form-select" aria-label="Default select Level" formControlName="courseLevel" id="courseLevel" style="padding: 12px;">
+                <option value="beginner" selected>Beginner</option>
+                <option value="intermediary">Intermediary</option>
+                <option value="advanced">Advanced</option>
+            </select>
+        </div>
+        <div class="row m-0 p-0">
+            <div class="col-12 col-lg-6">
+                <div class="row">
+                    <div class="col-12 col-lg-6">
+                        <label for="scheduledDate" class="form-label">Scheduled Date <span class="mandatory">*</span></label>
+                        <div class="card flex justify-content-center no-border">
+                            <p-calendar dateFormat="dd/mm/yy" id="scheduledDate" formControlName="scheduledDates" selectionMode="range" [readonlyInput]="true"></p-calendar>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3">
+                        <label for="scheduledTime" class="form-label">Scheduled Time <span class="mandatory">*</span></label>
+                        <div class="card flex justify-content-center no-border">
+                            <p-calendar id="scheduledTime" [timeOnly]="true" formControlName="scheduledTime" [showTime]="true" [showSeconds]="false"></p-calendar>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3">
+                        <label for="duration" class="form-label">Duration(in Hrs) <span class="mandatory">*</span></label>
+                        <div class="card flex justify-content-center no-border">
+                            <select class="form-select" aria-label="Default select Level" formControlName="duration" id="duration" style="padding: 12px;">
+                                <option value="1" selected>1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 col-12 col-lg-6">
+                <label for="coursePrice" class="form-label">Course Price(in Rs) <span class="mandatory">*</span></label>
+                <input type="number" class="form-control" id="coursePrice" formControlName="coursePrice" aria-describedby="coursePrice">
+            </div>
+            <div class="mb-3 col-12 col-lg-6">
+                <label for="courseType" class="form-label">Course Type <span class="mandatory">*</span></label>
+                <select class="form-select" aria-label="Default select courseType" formControlName="courseType" id="courseType" style="padding: 12px;">
+                    <option value="online" selected>Online</option>
+                    <option value="offline">Offline</option>
+                    <option value="hybrid">Hybrid</option>
+                </select>
+            </div>
+            <div class="mb-3 col-12 col-lg-6">
+                <label for="studentsClass" class="form-label">Targeted Class of Students <span class="mandatory">*</span></label>
+                <select class="form-select" aria-label="Default select studentsClass" formControlName="studentsClass" id="studentsClass" style="padding: 12px;">
+                    <option value="class1-class4" selected>Class 1 - Class 4</option>
+                    <option value="class5-class10">Class 5 - Class 10</option>
+                    <option value="undergraduate">Undergraduate</option>
+                    <option value="graduate">Graduate</option>
+                    <option value="postgraduate">Post Graduate</option>
+                    <option value="doctorate">Doctorate</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-12">
+            <label for="courseSummary" class="form-label">Course Summary <span class="mandatory">*</span></label>
+            <p-editor id="courseSummary" formControlName="courseSummary" [style]="{ height: '320px' }"></p-editor>
+        </div>
+        <div class="mb-3 col-12 mt-5">
+            <label for="courseImage" class="form-label">Course Images</label>
+            <small> ( Please select multiple pictures for this courses. It will help you find more students based on their interests)</small>
+            <div class="picture-container">
+                <div class="picture" *ngIf="urls">
+                    <img *ngFor='let url of urls'  [src]="url" height="100px" width="200px" style="margin: 0 4px;"> <br/>
+                  <input
+                    type="file"
+                    id="wizard-picture"
+                    (change)="onFileSelected($event)"
+                    autocomplete="off"
+                    multiple
+                    class=""
+                  />
+                </div>
+                <a class="choose-pic" href="javascript:void(0)">
+                    <span class="pi pi-plus"></span>
+                    Choose Pictures
+                </a>
+              </div>
+        </div>
+
+        <!-- <div class="mb-3 form-check col-12 col-lg-6">
+            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+            <label class="form-check-label" for="exampleCheck1">Remember Me</label>
+        </div> -->
+        <div class="button-container">
+            <button type="button" class="btn btn-secondary btn-add-course mt-3" [routerLink]="['/my-courses']">Cancel</button>
+            <button *ngIf="!docId" type="submit" [disabled]="courseForm.invalid" class="btn btn-primary btn-add-course mt-3" (click)="createCourse()" (keyup.enter)="createCourse()">Submit</button>
+            <button *ngIf="docId" type="submit" [disabled]="courseForm.invalid" class="btn btn-primary btn-add-course mt-3" (click)="updateCourse()" (keyup.enter)="updateCourse()">Update</button>
+        </div>
+    </form>
+</div>

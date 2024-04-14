@@ -1,0 +1,18 @@
+<div
+  *ngIf="showBanner"
+  class="banner"
+  [ngClass]="{
+    success: type === 'success',
+    error: type === 'error',
+    alert: type === 'alert'
+  }"
+>
+  <p class="banner-msg m-0">
+    {{ message }}
+    <fa-icon
+      class="close"
+      [icon]="faClose"
+      (click)="showBanner = false"
+    ></fa-icon>
+  </p>
+</div>

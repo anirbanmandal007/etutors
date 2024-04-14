@@ -1,0 +1,115 @@
+<app-header></app-header>
+<app-banner
+  *ngIf="type"
+  [type]="type"
+  [message]="type === 'success' ? successMessage : errorMessage"
+></app-banner>
+<div class="container account-form">
+  <div class="row">
+    <div class="colm-form col-12">
+      <form class="form-container row" [formGroup]="accountForm">
+        <div class="form-group col-12">
+          <!-- <input type="file"
+                    id="file"
+                    (change)="onFileSelected($event)"
+                    name="image"
+                    autocomplete="off"
+                    />
+                    <img *ngIf="fileUrl" class="profile-image" [src]="fileUrl" alt="Profile Image" /> -->
+          <div class="picture-container">
+            <div class="picture">
+              <img
+                height="100"
+                width="100"
+                *ngIf="previewUrl"
+                class="profile-image"
+                [src]="previewUrl"
+                alt="Profile Image"
+              />
+              <input
+                type="file"
+                id="wizard-picture"
+                (change)="onFileSelected($event)"
+                autocomplete="off"
+                class=""
+              />
+            </div>
+            <h6 class="">Choose Picture</h6>
+          </div>
+        </div>
+        <div class="col-12 col-lg-6">
+          <label for="firstname">First Name </label>
+          <input
+            type="text"
+            formControlName="name"
+            placeholder="Enter your name"
+          />
+        </div>
+        <div class="col-12 col-lg-6">
+          <label for="firstname">Last Name </label>
+          <input
+            type="text"
+            formControlName="lastname"
+            placeholder="Enter your last name"
+          />
+        </div>
+        <div class="col-12 col-lg-6">
+          <label for="firstname">Email </label>
+          <input
+            type="text"
+            readonly
+            formControlName="email"
+            autocomplete="new-password"
+            placeholder="Enter your email address"
+          />
+        </div>
+        <div class="col-12 col-lg-6">
+          <label for="firstname">Phone </label>
+          <input
+            type="text"
+            formControlName="phone"
+            autocomplete="new-password"
+            placeholder="Enter your phone number"
+          />
+        </div>
+        <div class="col-12 col-lg-6">
+          <label for="firstname">Age </label>
+          <input
+            type="text"
+            formControlName="age"
+            autocomplete="new-password"
+            placeholder="Enter your age"
+          />
+        </div>
+        <div class="col-12 col-lg-6">
+          <label for="firstname">Educational Qualification </label>
+          <input
+            type="text"
+            formControlName="degree"
+            autocomplete="new-password"
+            placeholder="Enter your highest degree"
+          />
+        </div>
+        <div class="col-12" *ngIf="userDetails?.userType === 'tutor'">
+          <label for="firstname">Subjects taught </label>
+          <!-- <tag-input formControlName="subjects"></tag-input> -->
+          <p-chips class="d-flex w-100" formControlName="subjects"></p-chips>
+        </div>
+        <div class="col-12" *ngIf="userDetails?.userType === 'student'">
+          <label for="firstname">Subjects interested in </label>
+          <p-chips class="d-flex w-100" formControlName="subjectsToLearn"></p-chips>
+        </div>
+        <div class="d-flex justify-content-center">
+          <button type="button" class="btn btn-secondary btn-login mt-5" [routerLink]="['/home']">Cancel</button>
+          <button
+            class="btn btn-primary btn-login mt-5"
+            (click)="updateAccount()"
+            [disabled]="!accountForm.valid"
+          >
+            Update
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

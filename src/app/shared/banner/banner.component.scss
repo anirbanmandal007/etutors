@@ -1,0 +1,28 @@
+.banner {
+  position: absolute;
+  top: 0;
+  z-index: 99;
+  width: 100%;
+  color: #fff;
+  padding: 0.5em;
+  border-radius: 0;
+  font-size: 18px;
+}
+
+.banner.success {
+  background-color: #198754;
+}
+
+.banner.error {
+  background-color: #fe4a0e;
+}
+
+.banner.alert {
+  background-color: #9c8609;
+}
+
+.close {
+  position: fixed;
+  right: 0.5em;
+  cursor: pointer;
+}

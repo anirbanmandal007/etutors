@@ -1,0 +1,50 @@
+<app-header></app-header>
+
+<div class="container-fluid">
+    <div class="row">
+        <p-table [value]="allCourses" [tableStyle]="{'min-width': '60rem'}">
+            <ng-template pTemplate="caption">
+                <div class="flex align-items-center justify-content-between">
+                    <h4>Your Courses
+                        <p-button icon="pi pi-plus-circle" class="add-course" [routerLink]="['/course']">Add New Courses</p-button>
+                    </h4>
+                    
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Course Name</th>
+                    <th>Subjects</th>
+                    <th>Level</th>
+                    <th>Price</th>
+                    <th>Timeline</th>
+                    <th>Ratings</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-course>
+                <tr>
+                    <td><a href="javascript:void(0)" (click)="editCourse(course.docId)">{{course.courseName}}</a></td>
+                    <!-- <td><img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + course.image" [alt]="product.name" width="100" class="shadow-4" /></td> -->
+                    <!-- <td>{{course.courseDesc}}</td> -->
+                    <td>{{course.courseSub.toString()}}</td>
+                    <td>{{course.courseLevel | titlecase}}</td>
+                    <td>Rs. {{course.coursePrice}}</td>
+                    <td>{{course.scheduledDates[0] | date: 'dd/MM/yyyy'}} - {{course.scheduledDates[1] | date: 'dd/MM/yyyy'}}</td>
+                    <td><p-rating [ngModel]="course.rating || 0" [readonly]="true" [cancel]="false"></p-rating>
+                    <!-- <td><p-rating [ngModel]="course.rating" [readonly]="true" [cancel]="false"></p-rating></td>
+                    <td><p-tag [value]="course.inventoryStatus" [severity]="getSeverity(course.inventoryStatus)"></p-tag></td> -->
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="6">You do not have any active courses. Please create a course by clicking on the "Add Course" button.</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="summary">
+                <div class="flex align-items-center justify-content-between">
+                    In total there are {{allCourses ? allCourses.length : 0 }} courses.
+                </div>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

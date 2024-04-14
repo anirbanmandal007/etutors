@@ -1,0 +1,15 @@
+.add-course {
+    position: absolute;
+    right: 0;
+}
+
+:host ::ng-deep .add-course button {
+    width: 200px;
+    padding: 8px;
+    font-size: 16px;
+
+    .pi-plus-circle {
+        padding-left: 8px;
+    }
+}
+

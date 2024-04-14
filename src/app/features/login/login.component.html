@@ -1,0 +1,30 @@
+<div class="container-fluid login-form">
+  <div class="row">
+    <div class="colm-form col-12">
+      <form class="form-container" [formGroup]="loginForm">
+        <h6>Please login using your Email Id and Password</h6>
+        <input
+          type="text"
+          autocomplete="new-password"
+          name="email"
+          formControlName="email"
+          placeholder="Email address or phone number"
+        />
+        <input
+          type="password"
+          autocomplete="new-password"
+          name="pass"
+          formControlName="authPass"
+          placeholder="Password"
+        />
+        <button class="btn-login" (click)="signInWithEmailAndPassword()">
+          Login
+        </button>
+        <a [routerLink]="['/forgot-password']">Forgotten password?</a>
+        <button class="btn-new" [routerLink]="['/register']">
+          Create new Account
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

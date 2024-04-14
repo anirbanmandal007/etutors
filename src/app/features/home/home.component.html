@@ -1,0 +1,13 @@
+<app-header></app-header>
+
+<div
+  class="container-fluid home-container"
+  *ngIf="loggedInUser.userType === 'tutor'"
+></div>
+
+<div
+  class="container-fluid home-container"
+  *ngIf="loggedInUser.userType === 'student'"
+>
+  <!-- <img src="./../../../assets/images/home_background.jpg" width="100%" height="800" alt="Home Background" /> -->
+</div>
