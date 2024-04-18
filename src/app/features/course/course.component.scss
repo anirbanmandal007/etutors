@@ -28,6 +28,7 @@ input,select {
     overflow: hidden;
     transition: all 0.2s;
     -webkit-transition: all 0.2s;
+    margin-bottom: 1em;
   }
   .picture:hover {
     border-color: #2ca8ff;
@@ -97,4 +98,19 @@ input,select {
   position: absolute;
   left: 48%;
   bottom: 50%;
+}
+
+.course-img {
+  position: relative;
+  float: left;
+}
+
+.delete-img {
+  position: absolute;
+  right: 6px;
+  top: 2px;
+  color: red;
+  font-weight: bold;
+  border: 2px solid;
+  cursor: pointer;
 }

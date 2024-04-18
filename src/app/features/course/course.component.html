@@ -93,8 +93,13 @@
             <label for="courseImage" class="form-label">Course Images</label>
             <small> ( Please select multiple pictures for this courses. It will help you find more students based on their interests)</small>
             <div class="picture-container">
-                <div class="picture" *ngIf="urls">
-                    <img *ngFor='let url of urls'  [src]="url" height="100px" width="200px" style="margin: 0 4px;"> <br/>
+                <div class="picture">
+                    <ng-container *ngFor='let url of urls; let i = index'>
+                        <div class="course-img">
+                            <img [src]="url" height="100px" width="200px" style="margin: 0 4px;"> 
+                            <i class="pi pi-times delete-img" (click)="deleteCourseImage(url, i)"></i>
+                        </div>
+                    </ng-container>
                   <input
                     type="file"
                     id="wizard-picture"

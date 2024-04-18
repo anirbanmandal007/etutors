@@ -9,12 +9,12 @@ import { ButtonModule } from 'primeng/button';
 import { Router, RouterModule } from '@angular/router';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { map } from 'rxjs';
+import { CarouselModule } from 'primeng/carousel';
 
 @Component({
   selector: 'app-my-courses',
   standalone: true,
-  imports: [HeaderComponent, TableModule, RatingModule, TagModule, ButtonModule, FormsModule, CommonModule, RouterModule],
+  imports: [HeaderComponent, TableModule, RatingModule, TagModule, ButtonModule, FormsModule, CommonModule, RouterModule, CarouselModule],
   templateUrl: './my-courses.component.html',
   styleUrl: './my-courses.component.scss'
 })
@@ -50,14 +50,23 @@ export class MyCoursesComponent {
     const allUserCourses = this.afs.collection('courses', ref => ref.where("mentor", '==', this.loggedInUser.email)).snapshotChanges();
     allUserCourses.subscribe((docs: any) => {
       docs.forEach((doc: any) => {
-        this.allCourses.push(
-          {docId: doc.payload.doc.id, ...doc.payload.doc.data()}
-        )
-        this.allCourses.map((course: any) => {
-          course.scheduledDates[0] = course.scheduledDates[0].toDate();
-          course.scheduledDates[1] = course.scheduledDates[1].toDate();
-          course.scheduledTime = course.scheduledTime.toDate();
-        })
+        if(this.allCourses.filter((el: any) => el.docId === doc.payload.doc.id).length === 0) {
+          this.allCourses.push(
+            {docId: doc.payload.doc.id, ...doc.payload.doc.data()}
+          )
+          this.allCourses.map((course: any) => {
+            // course.scheduledDates[0] = course.scheduledDates[0].toDate();
+            // course.scheduledDates[1] = course.scheduledDates[1].toDate();
+            // course.scheduledTime = course.scheduledTime.toDate();
+            const imageObjs: any = [];
+            course.images.map((image: string) => {
+              imageObjs.push({
+                name: image
+              });
+            });
+            course.imageObjs = imageObjs;
+          });
+        }
       });
       console.log(this.allCourses);
     });

@@ -109,7 +109,9 @@ export class CourseComponent {
     this.courseForm.controls['scheduledDates'].patchValue([date1,date2]);
     this.courseForm.controls['scheduledTime'].patchValue(this.existingDocData.scheduledTime.toDate());
     this.courseForm.controls['courseSummary'].patchValue(this.existingDocData.courseSummary);
-    this.urls = this.existingDocData.images;
+    if(this.existingDocData.images) {
+      this.urls = this.existingDocData.images;
+    }
   }
 
   createCourse() {
@@ -133,8 +135,18 @@ export class CourseComponent {
     console.log(this.courseForm.value);
     this._spinnerService.showSpinner();
     this.afs.doc(`courses/${this.docId}`).update(this.courseForm.value).then((res: any) => {
-      this._spinnerService.hideSpinner();
-      this._notificationService.success('Course has been updated successfully!');
+      if(this.deletedCourseImage?.length) {
+        this.deleteCourseImageFromStore();
+      }
+
+      if(this.allImages?.length) {
+        this.uploadAllCourseImages(this.docId);
+      } else {
+        this._spinnerService.hideSpinner();
+        this._notificationService.success('Course has been updated!');
+        this.router.navigate(['/my-courses']);
+      }
+      
     }).catch((e: any) => {
       this._spinnerService.hideSpinner();
       this._notificationService.error('Something went wrong!');
@@ -166,13 +178,13 @@ export class CourseComponent {
     )
     .then((snapshots) => {
       console.log(`All success`);
-      let allImagesPath: any = [];
+      let allImagesPath: any = this.docId ? this.urls.filter((el: any) => el.startsWith('https')) : [];
       snapshots.forEach((snap: any) => {
         snap.ref.getDownloadURL().then((url: any) => {
           allImagesPath.push(url);
           console.log(url);
           // All images url are pushed to allImagesPath array
-          if(snapshots.length === allImagesPath.length) {
+          if(snapshots.length + this.urls.filter((el: any) => el.startsWith('https')).length === allImagesPath.length) {
             this.addImagesUrlToCourse(courseId, allImagesPath);
           }
         });
@@ -206,8 +218,34 @@ export class CourseComponent {
   addImagesUrlToCourse(courseId: any, allImagesPath: any) {
     this.afs.doc(`courses/${courseId}`).update({images: allImagesPath});
     this._spinnerService.hideSpinner();
-    this._notificationService.success('Course has been created!');
+    this._notificationService.success(`Course has been ${this.docId ? 'updated!' : 'created!'}`);
     this.router.navigate(['/my-courses'])
+  }
+  deletedCourseImage: any = [];
+  deleteCourseImage(url: string, index: number) {
+    // Delete existing profile image linked with the current user
+    if (url && !url.startsWith('data')) {
+      this.deletedCourseImage.push(url);
+      this.urls = this.urls.filter((el: any) => el !== url);
+    } else {
+      this.allImages = [...this.allImages];
+      this.allImages.splice(index, 1);
+      this.urls.splice(index, 1);
+    }
+  }
+
+  deleteCourseImageFromStore() {
+    this.deletedCourseImage.forEach((url: string) => {
+      this.storage.storage.refFromURL(url).delete();
+      const _value = {
+        images: this.urls
+      }
+      this.afs.doc(`courses/${this.docId}`).update(_value).then((res: any) => {
+        // this._notificationService.success('Course image updated successfully!');
+      }).catch((e: any) => {
+        this._notificationService.error('Something went wrong!');
+      });
+    });
   }
   
 }
