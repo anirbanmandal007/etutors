@@ -1,0 +1,122 @@
+<app-header></app-header>
+<div class="container-fluid" *ngIf="courseDetails">
+    <div class="row no-gutters p-0">
+        <div class="col-12 p-0">
+            <div class="course-carousel">
+                <p-carousel *ngIf="courseDetails"
+                    [value]="courseDetails.images"
+                    [numVisible]="1"
+                    [numScroll]="1"
+                    [circular]="true"
+                    [autoplayInterval]="3000"
+                    [showNavigators]="false"
+                >
+                    <ng-template let-image pTemplate="item">
+                        <div
+                            class="border-1 surface-border border-round m-2 text-center py-5 px-3"
+                        >
+                            <div class="mb-3 img-gradient">
+                                <img
+                                    [src]="image"
+                                    class="w-6 shadow-2"
+                                />
+                            </div>
+                        </div>
+                    </ng-template>
+                </p-carousel>
+            </div>
+            <div class="course-detail">
+                <h1>{{courseDetails.courseName}}</h1>
+                <h4>{{courseDetails.courseDesc}}</h4>
+                <h5>Starting on {{courseDetails.scheduledDates[0] | date: 'dd/MM/yyyy'}}</h5>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container" *ngIf="courseDetails">
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <!-- <div class="card p-4"> -->
+                <h3 class="mb-3"><u>Course Summary</u></h3>
+                <div [innerHTML]="courseDetails.courseSummary"></div>
+            <!-- </div> -->
+        </div>
+        <div class="col-12 col-lg-6">
+            <div class="card p-4 about-tutor" *ngIf="authorDetails">
+                <h5 class="mb-0">
+                    <u>About Tutor</u>
+                    <img [src]="authorDetails.profileImage" alt="Profile image" style="float: right;" width="80" height="80" />
+                </h5>
+                <table class="about-tutor-table">
+                    <th></th>
+                    <tr>
+                        <td>Name</td>
+                        <td>{{authorDetails.name}} {{authorDetails.lastname}}</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>{{authorDetails.email}}</td>
+                    </tr>
+                    <tr>
+                        <td>Contact Number</td>
+                        <td>{{authorDetails.phone}}</td>
+                    </tr>
+                    <tr>
+                        <td>Highest Degree</td>
+                        <td>{{authorDetails.degree}}</td>
+                    </tr>
+                    <tr>
+                        <td>Skills</td>
+                        <td> {{authorDetails.subjects?.toString()}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="card p-4 about-tutor mt-5">
+                <h5>
+                    <u>Couse Details</u>
+                </h5>
+                <table class="about-tutor-table">
+                    <th></th>
+                    <tr>
+                        <td>Course Name</td>
+                        <td>{{courseDetails.courseName}}</td>
+                    </tr>
+                    <tr>
+                        <td>Course Subjects</td>
+                        <td>{{courseDetails.courseSub?.toString()}}</td>
+                    </tr>
+                    <tr>
+                        <td>Contact Type</td>
+                        <td>{{courseDetails.courseType | titlecase}}</td>
+                    </tr>
+                    <tr>
+                        <td>Scheduled Dates</td>
+                        <td>{{courseDetails.scheduledDates[0] | date: 'dd/MM/yyyy'}} - {{courseDetails.scheduledDates[1] | date: 'dd/MM/yyyy'}}</td>
+                    </tr>
+                    <tr>
+                        <td>Scheduled Time</td>
+                        <td>{{courseDetails.scheduledTime | date: 'h:mm a'}}</td>
+                    </tr>
+                    <tr>
+                        <td>Duration</td>
+                        <td>{{courseDetails.duration}} hours</td>
+                    </tr>
+                    <tr>
+                        <td>Course Price</td>
+                        <td>₹ {{courseDetails.coursePrice}}</td>
+                    </tr>
+                    <tr>
+                        <td>Course Level</td>
+                        <td>{{courseDetails.courseLevel | titlecase}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="col-12 pt-5 mt-5">
+            <h3><u>Comments</u></h3>
+            <app-comment-box [courseId]="courseId"></app-comment-box>
+        </div>
+    </div>
+</div>

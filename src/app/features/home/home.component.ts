@@ -4,11 +4,13 @@ import { CommonModule } from "@angular/common";
 import { AngularFireAuth } from "@angular/fire/compat/auth";
 import { Router } from "@angular/router";
 import { AccountService } from "../../core/services/account.service";
+import { StudentHomeComponent } from "../student-home/student-home.component";
+import { TutorHomeComponent } from "../tutor-home/tutor-home.component";
 
 @Component({
   selector: "app-home",
   standalone: true,
-  imports: [HeaderComponent, CommonModule],
+  imports: [HeaderComponent, CommonModule, StudentHomeComponent, TutorHomeComponent],
   templateUrl: "./home.component.html",
   styleUrl: "./home.component.scss",
 })

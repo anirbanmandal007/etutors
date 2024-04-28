@@ -7,6 +7,7 @@ import { ForgotPasswordComponent } from "./features/forgot-password/forgot-passw
 import { AccountComponent } from "./features/account/account.component";
 import { MyCoursesComponent } from "./features/my-courses/my-courses.component";
 import { CourseComponent } from "./features/course/course.component";
+import { CourseDetailComponent } from "./features/course-detail/course-detail.component";
 
 export const routes: Routes = [
   {
@@ -49,6 +50,11 @@ export const routes: Routes = [
   {
     path: "course/:id",
     component: CourseComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: "course-detail/:id",
+    component: CourseDetailComponent,
     canActivate: [authGuard],
   }
 ];

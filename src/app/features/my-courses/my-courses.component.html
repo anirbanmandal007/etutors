@@ -18,32 +18,16 @@
                     <th>Level</th>
                     <th>Price</th>
                     <th>Timeline</th>
+                    <th>Status</th>
                     <th>Ratings</th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-course>
                 <tr>
                     <td>
-                        <!-- <p-carousel *ngIf="course.imageObjs"
-                            [value]="course.imageObjs"
-                            [numVisible]="1"
-                            [numScroll]="1"
-                            [circular]="true"
-                        >
-                            <ng-template let-image pTemplate="item">
-                                <div
-                                    class="border-1 surface-border border-round m-2 text-center py-5 px-3"
-                                >
-                                    <div class="mb-3">
-                                    <img
-                                        [src]="image.name"
-                                        class="w-6 shadow-2"
-                                    />
-                                    </div>
-                                </div>
-                            </ng-template>
-                        </p-carousel> -->
-                        <a href="javascript:void(0)" (click)="editCourse(course.docId)">{{course.courseName}}</a>
+                        <a href="javascript:void(0)" [routerLink]="['/course-detail', course.docId]">{{course.courseName}}
+                            <i class="pi pi-pen-to-square" (click)="editCourse($event, course.docId)" style="padding-left: 8px;"></i>
+                        </a>
                     </td>
                     <!-- <td><img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + course.image" [alt]="product.name" width="100" class="shadow-4" /></td> -->
                     <!-- <td>{{course.courseDesc}}</td> -->
@@ -51,11 +35,11 @@
                     <td>{{course.courseLevel | titlecase}}</td>
                     <td>Rs. {{course.coursePrice}}</td>
                     <td>
-                        <!-- {{course.scheduledDates[0] | date: 'dd/MM/yyyy'}} - {{course.scheduledDates[1] | date: 'dd/MM/yyyy'}} -->
+                        {{course.scheduledDates[0] | date: 'dd/MM/yyyy'}} - {{course.scheduledDates[1] | date: 'dd/MM/yyyy'}}
                     </td>
+                    <td><p-tag [value]="getCourseStatus(course.scheduledDates)" [severity]="getSeverity(course.scheduledDates)"></p-tag></td>
+                    <!-- <td><p-tag [value]="getCourseStatus(course.scheduledDates)" [severity]="getSeverity(course.scheduledDates)"></p-tag></td> -->
                     <td><p-rating [ngModel]="course.rating || 0" [readonly]="true" [cancel]="false"></p-rating>
-                    <!-- <td><p-rating [ngModel]="course.rating" [readonly]="true" [cancel]="false"></p-rating></td>
-                    <td><p-tag [value]="course.inventoryStatus" [severity]="getSeverity(course.inventoryStatus)"></p-tag></td> -->
                 </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage">

@@ -1,0 +1,58 @@
+<div class="container">
+    <div class="col-12 text-center pt-5">
+        <h1>Suggested courses for you!</h1>
+      </div>
+      <div class="col-md-4 offset-md-4 mt-5 pt-3">
+      <div class="input-group mb-3">
+        <input type="text" [(ngModel)]="courseSearch" class="form-control" placeholder="Search courses you are looking for..." aria-label="Recipient's username">
+        <div class="input-group-append" (click)="searchCourses()">
+          <span class="input-group-text">
+            <i class="pi pi-search"></i>
+          </span>
+        </div>
+        </div>
+    </div>
+    <div class="row ng-scope">
+        <div class="col-12">
+            <p class="search-results-count">{{suggestedCourses.length}} results found</p>
+            <section class="search-result-item" *ngFor="let course of suggestedCourses">
+                <a class="image-link" href="javascript:void(0)">
+                    <img class="image" height="200" width="200" [src]="course?.images?.length ? course.images[0] : './../../../assets/images/course_placeholder.png'">
+                </a>
+                <div class="search-result-item-body">
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <h4 class="search-result-item-heading"><a [routerLink]="['/course-detail', course.docId]" href="javascript:void(0)" >{{course.courseName}}</a></h4>
+                            <p class="info">{{course.courseDesc}}</p>
+                            <h6 class="mb-3">Starting from {{course.scheduledDates[0] | date: 'dd/MM/yyyy'}}</h6>
+                            <p class="info">Course Level: {{course.courseLevel | titlecase}}</p>
+                            <p class="info">Instructor: {{course.mentor}}</p>
+                            <!-- <div class="description" [innerHTML]="course.courseSummary">Not just usual Metro. But something bigger. Not just usual widgets, but real widgets. Not just yet another admin template, but next generation admin template.</div> -->
+                        </div>
+                        <div class="col-sm-3 text-align-center">
+                            <p class="value3 mt-sm">₹ {{course.coursePrice}}</p>
+                            <p class="fs-mini text-muted">Course Mode: {{course.courseType | titlecase}}</p>
+                            <div [ngSwitch]="getCourseStatus(course)">
+                                <ng-container *ngSwitchCase="'Approved'">
+                                    <button class="btn btn-primary btn-info btn-sm" (click)="payForCourse(course)" disabled>Pay Now</button>
+                                </ng-container>
+                                <ng-container *ngSwitchCase="'Booked'">
+                                    <button class="btn btn-primary btn-info btn-sm" (click)="bookCourse(course)" disabled>Pay Now</button>
+                                </ng-container>
+                                <ng-container *ngSwitchCase="'Upcoming'">
+                                    <a class="btn btn-primary btn-info btn-sm" (click)="bookCourse(course)" href="javascript:void(0)">Book Now</a>
+                                </ng-container>
+                                <ng-container *ngSwitchCase="'In Progress'">
+                                    <span class="course-in-progress">In Progress</span>
+                                </ng-container>
+                                <ng-container *ngSwitchCase="'Completed'">
+                                    <span class="course-expired">Expired</span>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

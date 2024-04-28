@@ -14,6 +14,7 @@ import {
 import { Observable, map } from "rxjs";
 import { BannerComponent } from "../../shared/banner/banner.component";
 import { CommonModule } from "@angular/common";
+import { AccountService } from "../../core/services/account.service";
 
 @Component({
   selector: "app-signup",
@@ -40,6 +41,7 @@ export class SignupComponent {
     public router: Router,
     public ngZone: NgZone, // NgZone service to remove outside scope warning
     private fb: FormBuilder,
+    private _accountService: AccountService
   ) {
     this.signupForm = this.fb.group({
       name: ["", Validators.required],
@@ -99,8 +101,25 @@ export class SignupComponent {
             phone: this.signupForm.value.phone,
             userType: this.signupForm.value.userType,
           })
-          .then((res) => {
+          .then((user) => {
             this.isUserCreated = true;
+            const loggedInUserEmail = res.user.multiFactor.user.email;
+
+            // Set logged in user details in session storage
+            const users = this.afs
+              .collection("users", (ref) =>
+                ref.where("email", "==", loggedInUserEmail),
+              )
+              .valueChanges();
+              users.subscribe((users: any) => {
+              if (users.length === 0) {
+                sessionStorage.setItem("user", "[]");
+              } else {
+                sessionStorage.setItem("user", JSON.stringify(users[0]));
+                this._accountService.accountDetailsUpdated.next(Date.now());
+              }
+            });
+
             this.router.navigate(["/home"]);
           })
           .catch((e) => {

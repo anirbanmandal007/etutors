@@ -21,6 +21,7 @@ import { NotificationService } from "../../core/services/notification.service";
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  userSubsctiption: any;
 
   constructor(
     public afAuth: AngularFireAuth, // Inject Firebase auth service
@@ -34,6 +35,27 @@ export class LoginComponent {
       email: ["", Validators.required],
       authPass: ["", Validators.required],
     });
+    sessionStorage.clear();
+
+    // Playground
+    let a = [32, 44, 30, 4, 9, 34, 87, 56, 56, 22, 11, 33, 56];
+
+    // a.sort((a, b) => {return a - b});
+
+    // console.log(a[1])
+    let swap;
+    for (let i = 0; i < a.length; i++) {
+      for(let j = 0; j<a.length;j++) {
+        if (a[i] < a[j]) { // 32 < 44
+          swap = a[i]; // swap = 32
+          a[i] = a[j];
+          a[j] = swap;
+        }
+      }
+    }
+
+    console.log(a);
+
   }
 
   signInWithEmailAndPassword() {
@@ -51,12 +73,13 @@ export class LoginComponent {
         const loggedInUserEmail = userCredential.user.multiFactor.user.email;
 
         // Set logged in user details in session storage
+        sessionStorage.removeItem("user");
         const users = this.afs
           .collection("users", (ref) =>
             ref.where("email", "==", loggedInUserEmail),
           )
           .valueChanges();
-        users.subscribe((users: any) => {
+          users.subscribe((users: any) => {
           if (users.length === 0) {
             sessionStorage.setItem("user", "[]");
           } else {
@@ -75,5 +98,9 @@ export class LoginComponent {
         const errorMessage = error.message;
         this._notificationService.error("Bad credentials, please try again!");
       });
+  }
+
+  ngOnDestroy() {
+    // this.userSubsctiption.unsubscribe();
   }
 }

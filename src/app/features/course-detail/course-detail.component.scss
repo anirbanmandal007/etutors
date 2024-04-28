@@ -1,0 +1,48 @@
+:host ::ng-deep {
+    .img-gradient {
+        background-size: cover;
+        width: 100%;
+        position: relative;
+        display:inline-block;
+        background: -moz-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.65) 100%); /* FF3.6+ */
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.65)), color-stop(100%,rgba(0,0,0,0))); /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,0.65) 100%); /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,0.65) 100%); /* Opera 11.10+ */
+        background: -ms-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,0.65) 100%); /* IE10+ */
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ); /* W3C */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000',GradientType=0 ); /* IE6-9 */
+
+        img{
+            position:relative;
+            z-index:-1;
+            display:block;
+            width: 100%;
+            height: 80vh;
+        }
+    }
+
+    .surface-border {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+}
+
+// .course-carousel {
+//     position: absolute;
+// }
+
+.course-detail {
+    z-index: 23;
+    position: absolute;
+    color: #FFF;
+    // display: flex;
+    // justify-content: center;
+    text-align: center;
+    top: 200px;
+    width: 100%;
+}
+
+.card {
+    box-shadow: 2px 2px 4px 3px #dadada;
+    background: #e6f9fd;
+}

@@ -9,12 +9,11 @@ import { ButtonModule } from 'primeng/button';
 import { Router, RouterModule } from '@angular/router';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { CarouselModule } from 'primeng/carousel';
 
 @Component({
   selector: 'app-my-courses',
   standalone: true,
-  imports: [HeaderComponent, TableModule, RatingModule, TagModule, ButtonModule, FormsModule, CommonModule, RouterModule, CarouselModule],
+  imports: [HeaderComponent, TableModule, RatingModule, TagModule, ButtonModule, FormsModule, CommonModule, RouterModule],
   templateUrl: './my-courses.component.html',
   styleUrl: './my-courses.component.scss'
 })
@@ -49,14 +48,15 @@ export class MyCoursesComponent {
   getAllCourses() {
     const allUserCourses = this.afs.collection('courses', ref => ref.where("mentor", '==', this.loggedInUser.email)).snapshotChanges();
     allUserCourses.subscribe((docs: any) => {
+      this.allCourses = [];
       docs.forEach((doc: any) => {
         if(this.allCourses.filter((el: any) => el.docId === doc.payload.doc.id).length === 0) {
           this.allCourses.push(
             {docId: doc.payload.doc.id, ...doc.payload.doc.data()}
           )
           this.allCourses.map((course: any) => {
-            // course.scheduledDates[0] = course.scheduledDates[0].toDate();
-            // course.scheduledDates[1] = course.scheduledDates[1].toDate();
+            course.scheduledDates[0] = typeof course.scheduledDates[0].getMonth !== 'function' ? course.scheduledDates[0].toDate() : course.scheduledDates[0];
+            course.scheduledDates[1] = typeof course.scheduledDates[1].getMonth !== 'function' ? course.scheduledDates[1].toDate() : course.scheduledDates[1];
             // course.scheduledTime = course.scheduledTime.toDate();
             const imageObjs: any = [];
             course.images.map((image: string) => {
@@ -71,36 +71,32 @@ export class MyCoursesComponent {
       console.log(this.allCourses);
     });
 
-    // const allUserCourses = this.afs.collection('courses');
-    // // .snapshotChanges() returns a DocumentChangeAction[], which contains
-    // // a lot of information about "what happened" with each change. If you want to
-    // // get the data and the id use the map operator.
-    // this.allCourses = allUserCourses.snapshotChanges().pipe(
-    //   map(actions => {
-    //   return actions.map(a => {
-    //       const data: any = a.payload.doc.data();
-    //       const id = a.payload.doc.id;
-    //       return { id, ...data };
-    //   });
-    //   })
-    // );
-
   }
 
-  editCourse(docId: any) {
+  editCourse(e: any, docId: any) {
+    e.stopPropagation();
+    e.preventDefault();
     console.log(docId);
     this.router.navigate([`/course/${docId}`]);
   }
 
-  getSeverity(status: string) {
-    switch (status) {
-      case 'INSTOCK':
-        return 'success';
-      case 'LOWSTOCK':
+  getCourseStatus(scheduleDate: any) {
+      if(scheduleDate[0].getTime() > new Date().getTime())
+        return 'Upcoming';
+      else if (scheduleDate[0].getTime() < new Date().getTime() &&  scheduleDate[1].getTime() > new Date().getTime())
+        return 'In Progress';
+      else if (scheduleDate[1].getTime() < new Date().getTime())
+        return 'Completed';
+    return;
+  }
+
+  getSeverity(scheduleDate: any) {
+      if(scheduleDate[0].getTime() > new Date().getTime())
+        return 'primary';
+      else if (scheduleDate[0].getTime() < new Date().getTime() &&  scheduleDate[1].getTime() > new Date().getTime())
         return 'warning';
-      case 'OUTOFSTOCK':
-        return 'danger';
-    }
+      else if (scheduleDate[1].getTime() < new Date().getTime())
+        return 'success';
     return;
   }
 }

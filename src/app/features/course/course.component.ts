@@ -11,6 +11,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { NotificationService } from '../../core/services/notification.service';
 import { SpinnerService } from '../../core/services/spinner.service';
 import { EditorModule } from 'primeng/editor';
+import { FirestoreService } from '../../core/services/firestore.service';
 
 @Component({
   selector: 'app-course',
@@ -40,7 +41,8 @@ export class CourseComponent {
     private router: Router,
     private _notificationService: NotificationService,
     private _spinnerService: SpinnerService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private _fsService: FirestoreService
   ){}
 
   ngOnInit() {
@@ -72,7 +74,7 @@ export class CourseComponent {
   }
 
   getDocData() {
-    this.afs.collection('courses').doc(this.docId).ref.get().then((doc: any) => {
+    this._fsService.getCourseDetailsById(this.docId).then((doc: any) => {
       if (doc.exists) {
         this.existingDocData = doc.data();
         this.patchCourseForm();

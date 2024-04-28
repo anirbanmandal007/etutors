@@ -82,14 +82,14 @@ export class AccountComponent {
     users.subscribe((users: any) => {
       this.userDetails = users[0];
       this.accountForm.patchValue({
-        name: users[0].name,
-        lastname: users[0].lastname,
-        email: users[0].email,
-        phone: users[0].phone,
-        age: users[0].age,
-        degree: users[0].degree,
-        subjects: users[0].subjects,
-        subjectsToLearn: users[0].subjectsToLearn,
+        name: users[0].name || '',
+        lastname: users[0].lastname || '',
+        email: users[0].email || '',
+        phone: users[0].phone || '',
+        age: users[0].age || '',
+        degree: users[0].degree || '',
+        subjects: users[0].subjects || [],
+        subjectsToLearn: users[0].subjectsToLearn || [],
       });
       this.fileUrl = users[0].profileImage;
       this.previewUrl = users[0].profileImage;
