@@ -29,12 +29,55 @@
                 <h1>{{courseDetails.courseName}}</h1>
                 <h4>{{courseDetails.courseDesc}}</h4>
                 <h5>Starting on {{courseDetails.scheduledDates[0] | date: 'dd/MM/yyyy'}}</h5>
-                
+                <p class="info">
+                    <p-rating style="margin-left: 1em;" [(ngModel)]="courseDetails.ratingsAvg" [readonly]="true" [cancel]="false"></p-rating>
+                    <span class="rating-count">({{courseDetails.ratings?.length || 0}})</span>
+                </p>
+                <button class="btn btn-primary"  (click)="showBookingRequestsDialog()" *ngIf="loggedInUser.email === authorDetails?.email">Booking Requests</button>
+                <button class="btn btn-primary ms-3"  (click)="showConfirmedStudentsDialog()" *ngIf="loggedInUser.email === authorDetails?.email">Confirmed Students</button>
             </div>
         </div>
     </div>
 </div>
 
+<p-dialog header="Booking Requsets" [(visible)]="showBookingRequestsDialogVisible" [position]="'topright'" [style]="{ width: '30vw', height: '100vw' }">
+    <div class="card flex justify-content-center p-3">
+        <div class="flex flex-column gap-2">
+            <div *ngFor="let student of courseDetails?.bookedStudents?.booked" class="field-checkbox d-flex mb-3">
+                <img height="50px" width="50px" class="student-prof-pic" [src]="student.profileImage" alt="Student's pic" />
+                <h6>{{student.name}}</h6>
+                <div class="btn-container">
+                    <button class="btn btn-primary" (click)="acceptBookingRequest(student)">Accept</button>
+                    <button class="btn btn-danger" (click)="rejectBookingRequest(student)">Reject</button>
+                </div>
+            </div>
+            <div *ngIf="!courseDetails?.bookedStudents?.booked || courseDetails?.bookedStudents?.booked?.length === 0">
+                <h6>There is no new booking requset for this course.</h6>
+            </div>
+        </div>
+    </div>
+    
+</p-dialog>
+
+<p-dialog header="Confirmed Students" [(visible)]="showConfirmedStudentsDialogVisible" [position]="'topright'" [style]="{ width: '30vw', height: '100vw' }">
+    <div class="card flex justify-content-center p-3 mb-3" *ngFor="let student of courseDetails?.bookedStudents?.confirmed">
+        <div class="flex flex-column gap-2">
+            <div class="field-checkbox pull-left">
+                <img class="conf-student-prof-pic" [src]="student.profileImage" alt="Student's pic" />
+                <div class="student-details">
+                    <h6>Name: {{student.name}}</h6>
+                    <p class="m-0">Email: {{student.email}}</p>
+                    <p class="m-0">Contact No: {{student.phone}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="!courseDetails?.bookedStudents?.confirmed || courseDetails?.bookedStudents?.confirmed?.length === 0">
+        <div class="card flex justify-content-center p-3 mb-3">
+            <h6>There is no new confirmed student for this course.</h6>
+        </div>
+    </div>
+</p-dialog>
 <div class="container" *ngIf="courseDetails">
     <div class="row">
         <div class="col-12 col-lg-6">
@@ -114,7 +157,52 @@
                 </table>
             </div>
         </div>
+
         <div class="col-12 pt-5 mt-5">
+            
+        </div>
+
+        <div class="col-12 col-lg-6 pt-5 mt-5">
+            <!-- <button (click)="showDialog()" class="btn btn-primary">Rate this course</button> -->
+            <h3 class="mb-4"><u>Ratings & Reviews</u></h3>
+
+            <!-- <h6>Your Ratings</h6> -->
+            <ng-container *ngIf="this.courseDetails?.ratings[0]?.email !== loggedInUser.email && this.courseDetails?.mentor !== loggedInUser.email">
+                <p-rating [(ngModel)]="ratingValue" [cancel]="false"></p-rating>
+                <textarea class="form-control mt-2" [(ngModel)]="reviewComment"></textarea>
+                <button class="btn btn-primary mt-3" style="float: right;" (click)="submitRating()">Submit</button>
+            </ng-container>
+            <div class="comment-thread mb-5">
+                <!-- Comment 1 start -->
+                <details open class="comment" id="comment-1" *ngFor="let rating of courseDetails?.ratings; let i = index">
+                    <summary>
+                        <div class="comment-heading">
+                            <div class="comment-voting">
+                                <img class="user-photo" [src]="rating.userPhoto" alt="User photo" />
+                            </div>
+                            <div class="comment-info">
+                                <a href="javascript:void(0)" class="comment-author">
+                                    <span *ngIf="loggedInUser.email === rating.email">You</span>
+                                    <span *ngIf="loggedInUser.email !== rating.email">{{rating.fullName}}</span>
+                                    <p-rating style="margin-left: 1em;" [(ngModel)]="rating.rating" [readonly]="true" [cancel]="false"></p-rating>
+                                </a>
+                            </div>
+                        </div>
+                    </summary>
+            
+                    <div class="comment-body">
+                        <p>
+                            {{rating.comment}}
+                        </p>
+                    </div>
+                </details>
+                <h6 class="" *ngIf="courseDetails?.ratings === undefined || courseDetails?.ratings?.length === 0">
+                    No reviews yet for this course!
+                </h6>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-6 pt-5 mt-5">
             <h3><u>Comments</u></h3>
             <app-comment-box [courseId]="courseId"></app-comment-box>
         </div>

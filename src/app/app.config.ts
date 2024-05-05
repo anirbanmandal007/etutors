@@ -6,6 +6,7 @@ import { initializeApp, provideFirebaseApp } from "@angular/fire/app";
 import { environment } from "../environments/environment";
 import { getFirestore, provideFirestore } from "@angular/fire/firestore";
 import { FIREBASE_OPTIONS } from "@angular/fire/compat";
+import { provideNgxStripe } from "ngx-stripe";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,5 +17,6 @@ export const appConfig: ApplicationConfig = {
       provideFirebaseApp(() => initializeApp(environment.firebase)),
       provideFirestore(() => getFirestore()),
     ]),
+    provideNgxStripe(environment.stripePublishableKey)
   ],
 };

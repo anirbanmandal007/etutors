@@ -6,11 +6,15 @@ import { CarouselModule } from 'primeng/carousel';
 import { CommentBoxComponent } from '../comment-box/comment-box.component';
 import { NotificationService } from '../../core/services/notification.service';
 import { SpinnerService } from '../../core/services/spinner.service';
+import { DialogModule } from 'primeng/dialog';
+import { CheckboxModule } from 'primeng/checkbox';
+import { FormsModule } from '@angular/forms';
+import { RatingModule } from 'primeng/rating';
 
 @Component({
   selector: 'app-course-detail',
   standalone: true,
-  imports: [HeaderComponent, CarouselModule, CommentBoxComponent],
+  imports: [FormsModule, HeaderComponent, CarouselModule, CommentBoxComponent, DialogModule, CheckboxModule, RatingModule],
   templateUrl: './course-detail.component.html',
   styleUrl: './course-detail.component.scss'
 })
@@ -19,6 +23,13 @@ export class CourseDetailComponent implements OnInit {
   loggedInUser: any = JSON.parse(sessionStorage.getItem("user") || "[]");
   courseDetails: any;
   authorDetails: any;
+  showBookingRequestsDialogVisible: boolean = false;
+  showConfirmedStudentsDialogVisible: boolean = false;
+  selectedBookingRequests: any[] = [];
+  visible: boolean = false;
+  ratingValue!: number;
+  userProvidedRating!: number
+  reviewComment = "";
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -26,6 +37,15 @@ export class CourseDetailComponent implements OnInit {
     private _spinnerService: SpinnerService,
     private _notificationService: NotificationService
   ) {}
+  
+
+  showBookingRequestsDialog() {
+    this.showBookingRequestsDialogVisible = true;
+  }
+
+  showConfirmedStudentsDialog() {
+    this.showConfirmedStudentsDialogVisible = true;
+  }
 
   ngOnInit() {
     this.activatedRoute.params.subscribe(params => {
@@ -43,6 +63,20 @@ export class CourseDetailComponent implements OnInit {
         this.courseDetails.scheduledDates[0] = this.courseDetails.scheduledDates[0].toDate();
         this.courseDetails.scheduledDates[1] = this.courseDetails.scheduledDates[1].toDate();
         this.courseDetails.scheduledTime = this.courseDetails.scheduledTime.toDate();
+
+        if(this.courseDetails.ratings) {
+          this.courseDetails.ratingsAvg = Object.values(this.courseDetails.ratings).reduce((sum: number, item: any) => sum + item.rating, 0) / this.courseDetails.ratings.length;
+        }
+
+        // map current user's rating to top
+        if(this.courseDetails.ratings?.length > 0) {
+          let index = this.courseDetails.ratings.findIndex((el: any) => el.email === this.loggedInUser.email);
+          if(index > -1) {
+            this.courseDetails.ratings.unshift(this.courseDetails.ratings.splice(index, 1)[0]);
+          }
+        } else {
+          this.courseDetails.ratings = [];
+        }
         this.getTutorDetails();
       } else {
         this._notificationService.error("There is no document!");
@@ -64,5 +98,52 @@ export class CourseDetailComponent implements OnInit {
       });
       this._spinnerService.hideSpinner();
     });
+  }
+
+  acceptBookingRequest(student: any) {
+    const allBookedStudents = this.courseDetails.bookedStudents.booked;
+    const updatedBookedStudents = allBookedStudents.filter((el: any) => el.email !== student.email);
+    const approvedStudents = this.courseDetails?.bookedStudents?.confirmed || [];
+    approvedStudents.push(student);
+    this.courseDetails.bookedStudents.booked = updatedBookedStudents;
+    this.courseDetails.bookedStudents.confirmed = approvedStudents;
+    this._fsService.updateCourseById(this.courseId, this.courseDetails).then((res: any) => {
+      this._notificationService.success('Booking accepted successfully!');
+    }).catch((e: any) => {
+      this._notificationService.error('Something went wrong!');
+    });
+  }
+
+  rejectBookingRequest(student: any) {
+    const allBookedStudents = this.courseDetails.bookedStudents.booked;
+    const updatedBookedStudents = allBookedStudents.filter((el: any) => el.email !== student.email);
+    this.courseDetails.bookedStudents.booked = updatedBookedStudents;
+    this._fsService.updateCourseById(this.courseId, this.courseDetails).then((res: any) => {
+      this._notificationService.success('Booking rejected successfully!');
+    }).catch((e: any) => {
+      this._notificationService.error('Something went wrong!');
+    });
+  }
+
+  submitRating() {
+    if(!this.ratingValue) {
+      this._notificationService.error('Please select rating!');
+      return;
+    }
+    const ratings = this.courseDetails.ratings?.length ?  this.courseDetails.ratings : [];
+    ratings.push({
+      rating: this.ratingValue,
+      comment: this.reviewComment,
+      userPhoto: this.loggedInUser.profileImage,
+      fullName: this.loggedInUser.name + ' ' + this.loggedInUser.lastname,
+      email: this.loggedInUser.email
+    });
+    this.courseDetails.ratings = ratings;
+    this._fsService.updateCourseById(this.courseId, this.courseDetails).then((res: any) => {
+      this._notificationService.success('Rating submitted successfully!');
+      this.getCourseDetail();
+    }).catch((e: any) => {
+      this._notificationService.error('Something went wrong!');
+    })
   }
 }

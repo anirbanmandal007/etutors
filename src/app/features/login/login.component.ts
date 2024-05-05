@@ -11,6 +11,7 @@ import { Router, RouterModule } from "@angular/router";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { AccountService } from "../../core/services/account.service";
 import { NotificationService } from "../../core/services/notification.service";
+import { FirestoreService } from "../../core/services/firestore.service";
 
 @Component({
   selector: "app-login",
@@ -29,7 +30,8 @@ export class LoginComponent {
     private fb: FormBuilder,
     private router: Router,
     private _accountService: AccountService,
-    private _notificationService: NotificationService
+    private _notificationService: NotificationService,
+    private _fsService: FirestoreService
   ) {
     this.loginForm = this.fb.group({
       email: ["", Validators.required],
@@ -46,10 +48,10 @@ export class LoginComponent {
     let swap;
     for (let i = 0; i < a.length; i++) {
       for(let j = 0; j<a.length;j++) {
-        if (a[i] < a[j]) { // 32 < 44
-          swap = a[i]; // swap = 32
-          a[i] = a[j];
-          a[j] = swap;
+        if (a[i] > a[j]) {
+          swap = a[j];
+          a[j] = a[i];
+          a[i] = swap;
         }
       }
     }
@@ -74,16 +76,19 @@ export class LoginComponent {
 
         // Set logged in user details in session storage
         sessionStorage.removeItem("user");
-        const users = this.afs
-          .collection("users", (ref) =>
-            ref.where("email", "==", loggedInUserEmail),
-          )
-          .valueChanges();
+        // const users = this.afs
+        //   .collection("users", (ref) =>
+        //     ref.where("email", "==", loggedInUserEmail),
+        //   )
+        //   .valueChanges();
+        const users = this._fsService.getUserByEmail(loggedInUserEmail);
           users.subscribe((users: any) => {
-          if (users.length === 0) {
+          const usersData = users[0].payload.doc.data()
+          if (!usersData) {
             sessionStorage.setItem("user", "[]");
           } else {
-            sessionStorage.setItem("user", JSON.stringify(users[0]));
+            if(this.router.url === '/login') return;
+            sessionStorage.setItem("user", JSON.stringify(usersData));
             this._accountService.accountDetailsUpdated.next(Date.now());
           }
         });

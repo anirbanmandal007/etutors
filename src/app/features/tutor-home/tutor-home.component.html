@@ -30,6 +30,10 @@
                             <h6 class="mb-3">Starting from {{course.scheduledDates[0] | date: 'dd/MM/yyyy'}}</h6>
                             <p class="info">Course Level: {{course.courseLevel | titlecase}}</p>
                             <p class="info">Instructor: {{course.mentor}}</p>
+                            <p class="info">Ratings: 
+                                <p-rating style="margin-left: 1em;" [(ngModel)]="course.ratingsAvg" [readonly]="true" [cancel]="false"></p-rating>
+                                <span class="rating-count">({{course.ratings?.length || 0}})</span>
+                            </p>
                             <!-- <div class="description" [innerHTML]="course.courseSummary">Not just usual Metro. But something bigger. Not just usual widgets, but real widgets. Not just yet another admin template, but next generation admin template.</div> -->
                         </div>
                         <div class="col-sm-3 text-align-center">

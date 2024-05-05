@@ -15,7 +15,7 @@ export class FirestoreService {
   }
 
   updateCourseById(courseId: string, data: any) {
-    return this.afs.collection('courses').doc(courseId).update(data);
+    return this.afs.doc(`courses/${courseId}`).update(data);
   }
 
   getAllCourses() {

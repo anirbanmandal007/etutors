@@ -39,7 +39,7 @@
                     </td>
                     <td><p-tag [value]="getCourseStatus(course.scheduledDates)" [severity]="getSeverity(course.scheduledDates)"></p-tag></td>
                     <!-- <td><p-tag [value]="getCourseStatus(course.scheduledDates)" [severity]="getSeverity(course.scheduledDates)"></p-tag></td> -->
-                    <td><p-rating [ngModel]="course.rating || 0" [readonly]="true" [cancel]="false"></p-rating>
+                    <td><p-rating [ngModel]="course.ratingsAvg" [readonly]="true" [cancel]="false"></p-rating>
                 </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage">

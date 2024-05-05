@@ -1,6 +1,6 @@
 export function getCourseStatus(course: any) {
   const loggedInUser = JSON.parse(sessionStorage.getItem("user") || "[]");
-    if(course?.bookedStudents?.approved?.filter((el: any) => el.email === loggedInUser.email).length > 0)
+    if(course?.bookedStudents?.confirmed?.filter((el: any) => el.email === loggedInUser.email).length > 0)
       return 'Approved';
     if(course?.bookedStudents?.booked?.filter((el: any) => el.email === loggedInUser.email).length > 0)
       return 'Booked';

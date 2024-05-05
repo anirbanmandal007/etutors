@@ -5,11 +5,12 @@ import { NotificationService } from '../../core/services/notification.service';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { RatingModule } from 'primeng/rating';
 
 @Component({
   selector: 'app-tutor-home',
   standalone: true,
-  imports: [FormsModule, RouterModule, CommonModule],
+  imports: [FormsModule, RouterModule, CommonModule, RatingModule],
   templateUrl: './tutor-home.component.html',
   styleUrl: './tutor-home.component.scss'
 })
@@ -46,6 +47,10 @@ export class TutorHomeComponent {
       this.suggestedCourses.map((course: any) => {
         course.scheduledDates[0] = typeof course.scheduledDates[0].getMonth !== 'function' ? course.scheduledDates[0].toDate() : course.scheduledDates[0];
         course.scheduledDates[1] = typeof course.scheduledDates[1].getMonth !== 'function' ? course.scheduledDates[1].toDate() : course.scheduledDates[1];
+      
+        if(course.ratings) {
+          course.ratingsAvg = Object.values(course.ratings).reduce((sum: number, item: any) => sum + item.rating, 0) / course.ratings.length;
+        }
       });
       this._spinnerService.hideSpinner();
     });

@@ -65,6 +65,10 @@ export class MyCoursesComponent {
               });
             });
             course.imageObjs = imageObjs;
+
+            if(course.ratings) {
+              course.ratingsAvg = Object.values(course.ratings).reduce((sum: number, item: any) => sum + item.rating, 0)  / course.ratings.length;
+            }
           });
         }
       });

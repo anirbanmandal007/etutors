@@ -6,11 +6,12 @@ import { SpinnerService } from '../../core/services/spinner.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { RouterModule } from '@angular/router';
 import { getCourseStatus } from '../../core/utils/course-utils';
+import { RatingModule } from 'primeng/rating';
 
 @Component({
   selector: 'app-student-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, RatingModule],
   templateUrl: './student-home.component.html',
   styleUrl: './student-home.component.scss'
 })
@@ -19,7 +20,6 @@ export class StudentHomeComponent {
   courseSearch!: string;
   suggestedCourses: any = [];
   loggedInUser = JSON.parse(sessionStorage.getItem("user") || "[]");
-
   constructor(
     private _firestoreService: FirestoreService,
     private _spinnerService: SpinnerService,
@@ -48,6 +48,9 @@ export class StudentHomeComponent {
       this.suggestedCourses.map((course: any) => {
         course.scheduledDates[0] = typeof course.scheduledDates[0].getMonth !== 'function' ? course.scheduledDates[0].toDate() : course.scheduledDates[0];
         course.scheduledDates[1] = typeof course.scheduledDates[1].getMonth !== 'function' ? course.scheduledDates[1].toDate() : course.scheduledDates[1];
+        if(course.ratings) {
+          course.ratingsAvg = Object.values(course.ratings).reduce((sum: number, item: any) => sum + item.rating, 0) / course.ratings.length;
+        }
       });
       this._spinnerService.hideSpinner();
       console.log(this.suggestedCourses);
@@ -71,8 +74,8 @@ export class StudentHomeComponent {
     course.bookedStudents.booked.push({
       name: this.loggedInUser.name + ' ' + this.loggedInUser.lastname,
       email: this.loggedInUser.email,
-      profileImage: this.loggedInUser.profileImage,
-      phone: this.loggedInUser.phone
+      profileImage: this.loggedInUser.profileImage || '',
+      phone: this.loggedInUser.phone || ''
     });
     this._spinnerService.showSpinner();
     this._firestoreService.updateCourseById(course.docId, course).then((res: any) => {
@@ -84,7 +87,7 @@ export class StudentHomeComponent {
     })
   }
 
-  payForCourse(course: any) {
-
+  payForCourse(course: object) {
+    
   }
 }
