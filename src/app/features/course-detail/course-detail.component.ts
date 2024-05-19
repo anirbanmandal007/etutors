@@ -10,11 +10,12 @@ import { DialogModule } from 'primeng/dialog';
 import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
 import { RatingModule } from 'primeng/rating';
+import { ChatWindowComponent } from '../../shared/chat-window/chat-window.component';
 
 @Component({
   selector: 'app-course-detail',
   standalone: true,
-  imports: [FormsModule, HeaderComponent, CarouselModule, CommentBoxComponent, DialogModule, CheckboxModule, RatingModule],
+  imports: [FormsModule, HeaderComponent, ChatWindowComponent, CarouselModule, CommentBoxComponent, DialogModule, CheckboxModule, RatingModule],
   templateUrl: './course-detail.component.html',
   styleUrl: './course-detail.component.scss'
 })
@@ -30,6 +31,7 @@ export class CourseDetailComponent implements OnInit {
   ratingValue!: number;
   userProvidedRating!: number
   reviewComment = "";
+  isChatWindowClosed = true;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -145,5 +147,12 @@ export class CourseDetailComponent implements OnInit {
     }).catch((e: any) => {
       this._notificationService.error('Something went wrong!');
     })
+  }
+
+  openChatroom() {
+    this.isChatWindowClosed = true;
+    setTimeout(() => {
+      this.isChatWindowClosed = false;
+    }, 100);
   }
 }

@@ -1,0 +1,148 @@
+<div class="container" *ngIf="!isChatWindowClosed">
+    <!-- msg-header section starts -->
+    <div class="msg-header">
+      <div class="container1">
+        <!-- <img [src]="loggedInUser.profileImage" class="msgimg" /> -->
+        <div class="active">
+          <h6>Chatroom - {{courseName}}</h6>
+          <!-- <small *ngIf="isNotMinimized">Continue as {{loggedInUser.name}}</small> -->
+        </div>
+      </div>
+      <div class="control-icons">
+        <i class="pi pi-minus" style="font-size: 1rem;" (click)="isNotMinimized = !isNotMinimized"></i>
+        <i class="pi pi-times" style="font-size: 1rem;margin-left: 1em;" (click)="isChatWindowClosed=true"></i>
+      </div>
+    </div>
+    <!-- msg-header section ends -->
+
+    <!-- Chat inbox  -->
+    <div class="chat-page" *ngIf="isNotMinimized">
+      <div class="msg-inbox">
+        <div class="chats">
+          <!-- Message container -->
+          <div class="msg-page">
+            <ng-container *ngFor="let chat of chats">
+                <!-- Incoming messages -->
+                <div class="received-chats" *ngIf="chat.email !== loggedInUser.email">
+                    <div class="received-chats-img">
+                      <img [src]="chat.profImg" [title]="chat.email === loggedInUser.email ? 'You' : chat.name"/>
+                    </div>
+                    <div class="received-msg">
+                      <small class="user-name">{{chat.email === loggedInUser.email ? 'You' : chat.name}}<i *ngIf="chat.email === mentorEmail">(Instructor)</i> - <span class="time d-contents">{{chat.timestamp | date:'dd/MM/yyyy h:mm a'}}</span></small>
+                      <div class="received-msg-inbox">
+                        <p class="chat-msg" [innerHTML]="chat.message"></p>
+                        <!-- <span class="time">{{chat.timestamp | date:'dd/MM/yyyy h:mm a'}}</span> -->
+                      </div>
+                    </div>
+                </div>
+                <!-- Outgoing messages -->
+                <div class="outgoing-chats" *ngIf="chat.email === loggedInUser.email">
+                    <div class="outgoing-chats-img">
+                      <img [src]="chat.profImg" [title]="chat.email === loggedInUser.email ? 'You' : chat.name"/>
+                    </div>
+                    <div class="outgoing-msg">
+                      <small class="user-name float-right">You - <span class="time">{{chat.timestamp | date:'dd/MM/yyyy h:mm a'}}</span></small>
+                      <!-- <small class="user-name float-right">{{chat.email === loggedInUser.email ? 'You' : chat.name}}</small> -->
+                      <div class="outgoing-chats-msg">
+                        <p class="chat-msg" [innerHTML]="chat.message"></p>
+                      </div>
+                    </div>
+                </div>
+            </ng-container>
+            <p *ngIf="chats.length === 0">There is no comment yet, please add your comment to initiate a discussion.</p>
+            <!-- Incoming messages -->
+            <!-- <div class="received-chats">
+              <div class="received-chats-img">
+                <img src="user2.png" />
+              </div>
+              <div class="received-msg">
+                <div class="received-msg-inbox">
+                  <p>
+                    Hi !! This is message from Riya . Lorem ipsum, dolor sit
+                    amet consectetur adipisicing elit. Non quas nemo eum,
+                    earum sunt, nobis similique quisquam eveniet pariatur
+                    commodi modi voluptatibus iusto omnis harum illum iste
+                    distinctio expedita illo!
+                  </p>
+                  <span class="time">18:06 PM | July 24</span>
+                </div>
+              </div>
+            </div> -->
+            <!-- Outgoing messages -->
+            <!-- <div class="outgoing-chats">
+              <div class="outgoing-chats-img">
+                <img src="user1.png" />
+              </div>
+              <div class="outgoing-msg">
+                <div class="outgoing-chats-msg">
+                  <p class="multi-msg">
+                    Hi riya , Lorem ipsum dolor sit amet consectetur
+                    adipisicing elit. Illo nobis deleniti earum magni
+                    recusandae assumenda.
+                  </p>
+                  <p class="multi-msg">
+                    Lorem ipsum dolor sit amet consectetur.
+                  </p>
+
+                  <span class="time">18:30 PM | July 24</span>
+                </div>
+              </div>
+            </div> -->
+            <!-- <div class="received-chats">
+              <div class="received-chats-img">
+                <img src="user2.png" />
+              </div>
+              <div class="received-msg">
+                <div class="received-msg-inbox">
+                  <p class="single-msg">
+                    Hi !! This is message from John Lewis. Lorem ipsum, dolor
+                    sit amet consectetur adipisicing elit. iste distinctio
+                    expedita illo!
+                  </p>
+                  <span class="time">18:31 PM | July 24</span>
+                </div>
+              </div>
+            </div> -->
+            <!-- <div class="outgoing-chats">
+              <div class="outgoing-chats-img">
+                <img src="user1.png" />
+              </div>
+              <div class="outgoing-msg">
+                <div class="outgoing-chats-msg">
+                  <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Velit, sequi.
+                  </p>
+
+                  <span class="time">18:34 PM | July 24</span>
+                </div>
+              </div>
+            </div> -->
+          </div>
+        </div>
+
+        <!-- msg-bottom section -->
+
+        <div class="msg-bottom">
+          <form class="input-group" [formGroup]="form">
+            <i class="pi pi-paperclip" style="font-size: 1rem; position: relative; top: 10px;" (click)="file.click()"></i>
+            <input type="file" class="hidden-file-input" (keyup.enter)="onChatSubmit(form.value)" (change)="onFileSelected($event)" #file>
+            <input
+              formControlName="message"
+              (keyup.enter)="onChatSubmit(form.value)"
+              type="text"
+              class="form-control"
+              [attr.placeholder]="!attachmentFile ? 'Write message...' : ''"
+            />
+            <span *ngIf="attachmentFile" class="attachment-file">
+              {{attachmentFile.name}}
+              <i class="pi pi-times-circle remove-file" (click)="resetAttachment()"></i>
+            </span>
+            <span class="input-group-text send-icon" (click)="onChatSubmit(form.value)">
+                <i class="pi pi-send"></i>
+            </span>
+          </form>
+        </div>
+      </div>
+    </div>
+</div>

@@ -33,8 +33,20 @@
                     <p-rating style="margin-left: 1em;" [(ngModel)]="courseDetails.ratingsAvg" [readonly]="true" [cancel]="false"></p-rating>
                     <span class="rating-count">({{courseDetails.ratings?.length || 0}})</span>
                 </p>
-                <button class="btn btn-primary"  (click)="showBookingRequestsDialog()" *ngIf="loggedInUser.email === authorDetails?.email">Booking Requests</button>
-                <button class="btn btn-primary ms-3"  (click)="showConfirmedStudentsDialog()" *ngIf="loggedInUser.email === authorDetails?.email">Confirmed Students</button>
+                <button class="btn btn-primary"  (click)="showBookingRequestsDialog()" *ngIf="loggedInUser.email === authorDetails?.email">
+                    <i class="pi pi-address-book" style="font-size: 1rem;padding-right: 6px;"></i>
+                    Booking Requests
+                </button>
+                <button class="btn btn-primary ms-3"  (click)="showConfirmedStudentsDialog()" *ngIf="loggedInUser.email === authorDetails?.email">
+                    <i class="pi pi-verified" style="font-size: 1rem;padding-right: 6px;"></i>
+                    Confirmed Students
+                </button>
+                <p class="mt-3">
+                    <button class="btn btn-primary ms-3" (click)="openChatroom()">
+                        <i class="pi pi-comments" style="font-size: 1rem;padding-right: 6px;"></i>
+                        <span>Join Chatroom</span>
+                    </button>
+                </p>
             </div>
         </div>
     </div>
@@ -208,3 +220,10 @@
         </div>
     </div>
 </div>
+
+<app-chat-window *ngIf="courseDetails && authorDetails"
+ [isChatWindowClosed]="isChatWindowClosed" 
+ [courseId]="courseId" 
+ [courseName]="courseDetails.courseName"
+ [mentorEmail]="authorDetails.email">
+</app-chat-window>
