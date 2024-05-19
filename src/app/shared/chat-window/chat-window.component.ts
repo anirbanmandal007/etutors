@@ -121,7 +121,7 @@ export class ChatWindowComponent {
         this.downloadURL = fileRef.getDownloadURL();
         this.downloadURL.subscribe((url: any) => {
           if (url) {
-            this.form.controls['message'].setValue(`<a href=${url}>${this.attachmentFile.name}</a>`);
+            this.form.controls['message'].setValue(`<a href=${url}>${this.attachmentFile?.name}</a>`);
             this.onChatSubmit(this.form.value);
             this.resetAttachment();
             this._spinnerService.hideSpinner();
