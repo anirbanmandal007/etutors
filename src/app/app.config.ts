@@ -6,7 +6,6 @@ import { initializeApp, provideFirebaseApp } from "@angular/fire/app";
 import { environment } from "../environments/environment";
 import { getFirestore, provideFirestore } from "@angular/fire/firestore";
 import { FIREBASE_OPTIONS } from "@angular/fire/compat";
-import { provideNgxStripe } from "ngx-stripe";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
@@ -17,7 +16,6 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom([
       provideFirebaseApp(() => initializeApp(environment.firebase)),
       provideFirestore(() => getFirestore()),
-    ]),
-    provideNgxStripe(environment.stripePublishableKey), provideAnimationsAsync()
+    ]), provideAnimationsAsync()
   ],
 };

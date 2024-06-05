@@ -37,6 +37,9 @@
                             <p class="value3 mt-sm">₹ {{course.coursePrice}}</p>
                             <p class="fs-mini text-muted">Course Mode: {{course.courseType | titlecase}}</p>
                             <div [ngSwitch]="getCourseStatus(course)">
+                                <ng-container *ngSwitchCase="'Enrolled'">
+                                    <button class="btn btn-primary btn-info btn-sm" disabled (click)="payForCourse(course)">Pay Now</button>
+                                </ng-container>
                                 <ng-container *ngSwitchCase="'Approved'">
                                     <button class="btn btn-primary btn-info btn-sm" (click)="payForCourse(course)">Pay Now</button>
                                 </ng-container>

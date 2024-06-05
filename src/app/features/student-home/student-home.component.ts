@@ -7,7 +7,7 @@ import { NotificationService } from '../../core/services/notification.service';
 import { RouterModule } from '@angular/router';
 import { getCourseStatus } from '../../core/utils/course-utils';
 import { RatingModule } from 'primeng/rating';
-
+declare var Razorpay: any;
 @Component({
   selector: 'app-student-home',
   standalone: true,
@@ -84,10 +84,58 @@ export class StudentHomeComponent {
     }).catch((e: any) => {
       this._spinnerService.hideSpinner();
       this._notificationService.error('Something went wrong');
-    })
+    });
   }
 
-  payForCourse(course: object) {
-    
+  payForCourse(course: any) {
+    const RozarpayOptions = {
+      description: course.courseName,
+      currency: 'INR',
+      amount: course.coursePrice * 100,
+      name: this.loggedInUser.name + ' ' + this.loggedInUser.lastname,
+      key: 'rzp_test_yxkezuoOH6vmlh',
+      prefill: {
+        name: this.loggedInUser.name + ' ' + this.loggedInUser.lastname,
+        email: this.loggedInUser.email,
+        phone: this.loggedInUser.phone
+      },
+      theme: {
+        color: '#6466e3'
+      },
+      modal: {
+        ondismiss:  () => {
+          console.log('dismissed')
+        }
+      }
+    }
+
+    const successCallback = (paymentid: any) => {
+      console.log(paymentid);
+      if(!course.bookedStudents?.subscribed) {
+        course.bookedStudents.subscribed = []
+      }
+
+      course.bookedStudents.subscribed.push({
+        name: this.loggedInUser.name + ' ' + this.loggedInUser.lastname,
+        email: this.loggedInUser.email,
+        profileImage: this.loggedInUser.profileImage || '',
+        phone: this.loggedInUser.phone || ''
+      });
+      this._spinnerService.showSpinner();
+      this._firestoreService.updateCourseById(course.docId, course).then((res: any) => {
+        this._spinnerService.hideSpinner();
+        this._notificationService.success('Payment received, you are succesfully enrolled for this course!', 10000);
+      }).catch((e: any) => {
+        this._spinnerService.hideSpinner();
+        this._notificationService.error('Something went wrong');
+      });
+      
+    }
+
+    const failureCallback = (e: any) => {
+      console.log(e);
+    }
+
+    Razorpay.open(RozarpayOptions,successCallback, failureCallback);
   }
 }
